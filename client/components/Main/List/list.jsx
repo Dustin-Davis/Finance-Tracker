@@ -9,8 +9,8 @@ const List = () => {
 
   const transactions = [
     { id: 1, type: 'Income', category: 'Salary', amount: 75, date: 'Thurs Feb 17' },
-    { id: 2, type: 'Expense', category: 'Car', amount: 750, date: 'Thurs Feb 18' },
-    { id: 3, type: 'Income', category: 'Salary', amount: 7500, date: 'Thurs Feb 19' }
+    { id: 2, type: 'Expense', category: 'Car', amount: 750, date: 'Fri Feb 18' },
+    { id: 3, type: 'Income', category: 'Salary', amount: 7500, date: 'Sat Feb 19' }
 
   ];
 
