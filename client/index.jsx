@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app';
+import { Provider } from './Context/context';
 
 ReactDOM.render(
-    <App />,
-    document.querySelector('#root')
+  <Provider>
+      <App />,
+  </Provider>,
+  document.querySelector('#root')
 );
