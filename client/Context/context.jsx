@@ -12,11 +12,18 @@ export const Provider = ({ children }) => {
   // Action Creators
   // Dispatch is changing the state of transaction
   const deleteTransaction = id => {
-    dispatch({ type: 'DELETE_TRANSACTIONS', payload: id });
+    dispatch({ type: 'DELETE_TRANSACTION', payload: id });
   };
 
-  const addTransaction = transactions => {
-    dispatch({ type: 'ADD_TRANSACTION', payload: transactions });
+  const addTransaction = transaction => {
+    const fetchConfig = { method: 'POST', body: JSON.stringify(transaction), headers: { 'Content-Type': 'application/json' } }; // add config for fetch here
+    // eslint-disable-next-line no-console
+    console.log('Transaction in addTransaction', transaction);
+    fetch('/api/transactions', fetchConfig)
+      .then(resp => resp.json())
+      .then(newTransaction => {
+        dispatch({ type: 'ADD_TRANSACTION', payload: newTransaction });
+      });
   };
 
   return (

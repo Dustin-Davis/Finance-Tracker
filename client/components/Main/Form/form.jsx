@@ -1,28 +1,39 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { TextField, Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ExpenseTrackerContext } from '../../../Context/context';
-import { v4 as uuidv4 } from 'uuid';
-
+// import { v4 as uuidv4 } from 'uuid';
 import useStyles from './styles';
 
 const initialState = {
   amount: '',
   category: '',
-  type: 'Income',
+  type: '',
   date: new Date()
 };
 
 const Form = () => {
   const classes = useStyles();
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState(initialState);
   const { addTransaction } = useContext(ExpenseTrackerContext);
 
+  useEffect(() => {
+    fetch('/api/categories')
+      .then(resp => resp.json())
+      .then(categories => {
+        setCategories(categories);
+      });
+  }, []);
+
   const createTransaction = () => {
-    const transaction = { ...formData, amount: Number(formData.amount), id: uuidv4() };
+    const transaction = { ...formData };
+    // eslint-disable-next-line no-console
+    console.log('New Transaction', transaction);
     addTransaction(transaction);
     setFormData(initialState);
   };
-
+  // eslint-disable-next-line no-console
+  console.log('Categories', categories);
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
