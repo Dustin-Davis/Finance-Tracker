@@ -65,16 +65,41 @@ app.post('/api/transactions', (req, res) => {
     });
     return;
   }
-  const sql = `
-    insert into "transactions" ("amount", "type", "categoryId", "userId", "date")
-    values ($1, $2, $3, $4, $5)
-    returning *
+  const categorySQL = `
+    select "category" from "categories"
+    where "categoryId" = $1;
   `;
-  const params = [body.amount, body.type, body.categoryId, userId, body.date];
-  db.query(sql, params)
-    .then(result => {
-      const [transactions] = result.rows;
-      res.status(201).json(transactions);
+  const categoryParams = [body.categoryId];
+
+  // Query to get category information
+  db.query(categorySQL, categoryParams)
+    .then(categoryResult => {
+      const [category] = categoryResult.rows;
+
+      if (!category) {
+        return res.status(400).json({ error: 'Invalid category ID provided' });
+      }
+
+      const sql = `
+        insert into "transactions" ("amount", "type", "categoryId", "userId", "date")
+        values ($1, $2, $3, $4, $5)
+        returning "transactionId", "amount", "type", "categoryId", to_char("date", 'YYYY/MM/DD') as "date"
+      `;
+      const params = [body.amount, body.type, body.categoryId, userId, body.date];
+
+      db.query(sql, params)
+        .then(result => {
+          const [transaction] = result.rows;
+          // Add category name to transaction object
+          transaction.category = category.category;
+          res.status(201).json(transaction);
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).json({
+            error: 'an unexpected error occurred'
+          });
+        });
     })
     .catch(err => {
       console.error(err);

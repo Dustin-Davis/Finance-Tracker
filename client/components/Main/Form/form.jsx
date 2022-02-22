@@ -6,7 +6,7 @@ import useStyles from './styles';
 
 const initialState = {
   amount: '',
-  category: '',
+  categoryId: '',
   type: '',
   date: new Date()
 };
@@ -51,9 +51,12 @@ const Form = () => {
       <Grid item xs={6}>
         <FormControl fullWidth>
           <InputLabel>Category</InputLabel>
-          <Select value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}>
-            <MenuItem value='salary'>Salary</MenuItem>
-            <MenuItem value='business'>Business</MenuItem>
+          <Select value={formData.categoryId} onChange={e => setFormData({ ...formData, categoryId: e.target.value })}>
+            {
+             categories.map(cat => (
+                <MenuItem key={cat.categoryId} value={cat.categoryId}>{cat.category}</MenuItem>
+             ))
+            }
           </Select>
         </FormControl>
       </Grid>

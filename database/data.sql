@@ -1,15 +1,20 @@
 insert into users
  ("email", "password")
  values
-  ('test@mail.com', 'asdf'), -- this will be userId 1
-  ('user@mail.com', 'asdf'); -- userId 2
+  ('test@mail.com', 'asdf'),
+  ('user@mail.com', 'asdf');
 
 insert into categories
   ("category")
   values
-   ('salary'), -- This will be categoryId 1
-   ('food'), -- categoryId 2
-   ('entertainment'); -- categoryId 3
+   ('Salary'),
+   ('Food'),
+   ('Entertainment'),
+   ('Bills'),
+   ('Travel'),
+   ('Car'),
+   ('House'),
+   ('Phone');
 
 insert into transactions
   ("amount", "type", "categoryId", "userId", "date")
