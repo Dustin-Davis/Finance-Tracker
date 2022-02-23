@@ -7,14 +7,26 @@ insert into users
 insert into categories
   ("category")
   values
+   ('Business'),
+   ('Investments'),
+   ('Extra income'),
+   ('Deposits'),
+   ('Lottery'),
+   ('Gifts'),
    ('Salary'),
-   ('Food'),
-   ('Entertainment'),
+   ('Savings'),
+   ('Rental income'),
    ('Bills'),
-   ('Travel'),
    ('Car'),
+   ('Clothes'),
+   ('Travel'),
+   ('Food'),
+   ('Shopping'),
    ('House'),
-   ('Phone');
+   ('Entertainment'),
+   ('Phone'),
+   ('Pets'),
+   ('Other');
 
 insert into transactions
   ("amount", "type", "categoryId", "userId", "date")
