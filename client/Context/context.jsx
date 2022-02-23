@@ -14,12 +14,10 @@ export const Provider = ({ children }) => {
   const deleteTransaction = transactionId => {
     const fetchConfig = { method: 'DELETE' };
     fetch(`/api/transactions/${transactionId}`, fetchConfig)
-      .then(resp => resp.json())
       .then(id => {
-        dispatch({ type: 'DELETE_TRANSACTION', payload: id });
+        dispatch({ type: 'DELETE_TRANSACTION', payload: transactionId });
       });
-    // eslint-disable-next-line no-console
-    console.log(transactionId);
+
   };
 
   const addTransaction = transaction => {
