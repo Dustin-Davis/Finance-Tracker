@@ -11,14 +11,17 @@ export const Provider = ({ children }) => {
 
   // Action Creators
   // Dispatch is changing the state of transaction
-  const deleteTransaction = id => {
-    dispatch({ type: 'DELETE_TRANSACTION', payload: id });
+  const deleteTransaction = transactionId => {
+    const fetchConfig = { method: 'DELETE' };
+    fetch(`/api/transactions/${transactionId}`, fetchConfig)
+      .then(id => {
+        dispatch({ type: 'DELETE_TRANSACTION', payload: transactionId });
+      });
+
   };
 
   const addTransaction = transaction => {
-    const fetchConfig = { method: 'POST', body: JSON.stringify(transaction), headers: { 'Content-Type': 'application/json' } }; // add config for fetch here
-    // eslint-disable-next-line no-console
-    console.log('Transaction in addTransaction', transaction);
+    const fetchConfig = { method: 'POST', body: JSON.stringify(transaction), headers: { 'Content-Type': 'application/json' } };
     fetch('/api/transactions', fetchConfig)
       .then(resp => resp.json())
       .then(newTransaction => {
@@ -28,9 +31,9 @@ export const Provider = ({ children }) => {
 
   return (
     <ExpenseTrackerContext.Provider value={{
+      transactions,
       deleteTransaction,
-      addTransaction,
-      transactions
+      addTransaction
     }}>
       {children}
     </ExpenseTrackerContext.Provider>

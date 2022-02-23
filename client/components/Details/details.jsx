@@ -5,13 +5,12 @@ import useStyles from './styles';
 
 const Details = ({ title }) => {
   const classes = useStyles();
-
   return (
       <Card className={title === 'Income' ? classes.income : classes.expense}>
         <CardHeader title={title} />
         <CardContent>
-          <Typography variant='h5'>$125</Typography>
-          {/* <Doughnut data='data' /> */}
+          <Typography variant='h5'>${100}</Typography>
+          {/* <Doughnut data={chartData} /> */}
         </CardContent>
       </Card>
   );
