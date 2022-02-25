@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { List as MUIList, ListItem, ListItemAvatar, ListItemText, Avatar, ListItemSecondaryAction, IconButton, Slide } from '@material-ui/core';
 import { Delete, MoneyOff } from '@material-ui/icons';
 
@@ -7,16 +7,10 @@ import useStyles from './styles';
 
 const List = () => {
   const classes = useStyles();
-  const { deleteTransaction, transactions } = useContext(ExpenseTrackerContext);
-  // eslint-disable-next-line no-unused-vars
-  const [Transactions, setTransactions] = useState([]);
+  const { deleteTransaction, getTransactions, transactions } = useContext(ExpenseTrackerContext);
 
   useEffect(() => {
-    fetch('/api/transactions')
-      .then(resp => resp.json())
-      .then(Transactions => {
-        setTransactions(Transactions);
-      });
+    getTransactions();
   }, []);
 
   return (

@@ -22,12 +22,24 @@ const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 
 app.get('/api/transactions', (req, res) => {
+  const userId = 1;
+
   const sql = `
-    select *
+    select
+      "transactionId",
+      "amount",
+      "type",
+      "category",
+      "categoryId",
+      to_char("date", 'MM/DD/YYYY') as "date"
       from "transactions"
-     order by "transactionId"
+      join "categories" using ("categoryId")
+      where "userId" = $1
+      order by date desc
   `;
-  db.query(sql)
+  const params = [userId];
+
+  db.query(sql, params)
     .then(result => {
       res.json(result.rows);
     })
@@ -45,6 +57,29 @@ app.get('/api/categories', (req, res) => {
       from "categories"
   `;
   db.query(sql)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.get('/api/users', (req, res) => {
+  const userId = 1;
+  const sql = `
+    select *
+      from "users"
+      join "transactions" using ("userId")
+    where "userId" = $1
+  `;
+
+  const params = [userId];
+
+  db.query(sql, params)
     .then(result => {
       res.json(result.rows);
     })
@@ -83,7 +118,7 @@ app.post('/api/transactions', (req, res) => {
       const sql = `
         insert into "transactions" ("amount", "type", "categoryId", "userId", "date")
         values ($1, $2, $3, $4, $5)
-        returning "transactionId", "amount", "type", "categoryId", to_char("date", 'YYYY/MM/DD') as "date"
+        returning "transactionId", "amount", "type", "categoryId", to_char("date", 'MM/DD/YYYY') as "date"
       `;
       const params = [body.amount, body.type, body.categoryId, userId, body.date];
 

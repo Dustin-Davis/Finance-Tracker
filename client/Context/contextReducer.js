@@ -11,6 +11,9 @@ const contextReducer = (state, action) => {
       transactions = [action.payload, ...state];
 
       return transactions;
+    case 'GET_TRANSACTION':
+
+      return [...action.payload];
     default:
       return state;
   }
