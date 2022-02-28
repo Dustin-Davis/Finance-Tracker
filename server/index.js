@@ -125,7 +125,6 @@ app.post('/api/transactions', (req, res) => {
       db.query(sql, params)
         .then(result => {
           const [transaction] = result.rows;
-          // Add category name to transaction object
           transaction.category = category.category;
           res.status(201).json(transaction);
         })
