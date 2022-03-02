@@ -9,7 +9,7 @@ create schema "public";
 CREATE TABLE "users" (
     "userId" serial NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "hashedPassword" TEXT NOT NULL,
     "createdAt" TIMESTAMPTZ NOT NULL default now(),
     CONSTRAINT "users_pk" PRIMARY KEY ("userId")
 ) WITH (

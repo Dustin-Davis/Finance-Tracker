@@ -1,5 +1,5 @@
 insert into users
- ("email", "password")
+ ("email", "hashedPassword")
  values
   ('test@mail.com', 'asdf'),
   ('user@mail.com', 'asdf');
