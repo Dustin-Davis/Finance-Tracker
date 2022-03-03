@@ -7,7 +7,7 @@ export const ExpenseTrackerContext = createContext(initialState);
 
 export const Provider = ({ children }) => {
 
-  const [transactions, dispatch] = useReducer(contextReducer, initialState);
+  const [transactions, dispatch, user] = useReducer(contextReducer, initialState);
   // Action Creators
   // Dispatch is changing the state of transaction
   const deleteTransaction = transactionId => {
@@ -25,6 +25,15 @@ export const Provider = ({ children }) => {
       .then(resp => resp.json())
       .then(newTransaction => {
         dispatch({ type: 'ADD_TRANSACTION', payload: newTransaction });
+      });
+  };
+
+  const addUser = user => {
+    const fetchConfig = { method: 'POST', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json' } };
+    fetch('/api/users', fetchConfig)
+      .then(resp => resp.json())
+      .then(newUser => {
+        dispatch({ type: 'ADD_USER', payload: newUser });
       });
   };
 
@@ -46,7 +55,9 @@ export const Provider = ({ children }) => {
       balance,
       deleteTransaction,
       addTransaction,
-      getTransactions
+      getTransactions,
+      addUser,
+      user
     }}>
       {children}
     </ExpenseTrackerContext.Provider>

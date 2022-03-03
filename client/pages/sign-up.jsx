@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +10,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { ExpenseTrackerContext } from '../Context/context';
+
+const initialState = {
+  email: '',
+  password: ''
+};
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -33,6 +39,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const [formData, setFormData] = useState(initialState);
+  const { addUser } = useContext(ExpenseTrackerContext);
+
+  const createUser = () => {
+    const user = { ...formData };
+    addUser(user);
+    setFormData(initialState);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -44,7 +58,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -55,6 +69,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -67,6 +82,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={e => setFormData({ ...formData, password: e.target.value })}
               />
             </Grid>
           </Grid>
@@ -77,6 +93,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={createUser}
           >
             Sign Up
           </Button>
