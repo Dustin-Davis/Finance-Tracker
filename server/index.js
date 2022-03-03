@@ -3,6 +3,8 @@ const express = require('express');
 const pg = require('pg');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const argon2 = require('argon2');
+const ClientError = require('./client-error');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -125,7 +127,6 @@ app.post('/api/transactions', (req, res) => {
       db.query(sql, params)
         .then(result => {
           const [transaction] = result.rows;
-          // Add category name to transaction object
           transaction.category = category.category;
           res.status(201).json(transaction);
         })
@@ -142,6 +143,32 @@ app.post('/api/transactions', (req, res) => {
         error: 'an unexpected error occurred'
       });
     });
+});
+
+app.post('/api/users', (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new ClientError(400, 'username and password are required fields');
+  }
+
+  argon2.hash(password)
+    .then(hashedPassword => {
+      const sql = `insert into "users"
+      ("email", "hashedPassword")
+      values ($1, $2)
+      returning *`;
+      const params = [email, hashedPassword];
+      db.query(sql, params)
+        .then(result => {
+          res.status(201).json({
+            userId: result.rows[0].userId,
+            email: result.rows[0].email,
+            createdAt: result.rows[0].createdAt
+          });
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
 });
 
 app.delete('/api/transactions/:transactionId', (req, res) => {
