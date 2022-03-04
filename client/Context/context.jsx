@@ -30,7 +30,7 @@ export const Provider = ({ children }) => {
 
   const addUser = user => {
     const fetchConfig = { method: 'POST', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json' } };
-    fetch('/api/users', fetchConfig)
+    fetch('/api/users/sign-up', fetchConfig)
       .then(resp => resp.json())
       .then(newUser => {
         dispatch({ type: 'ADD_USER', payload: newUser });
