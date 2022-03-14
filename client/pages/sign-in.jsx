@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +10,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { ExpenseTrackerContext } from '../Context/context';
+
+const initialState = {
+  email: '',
+  password: ''
+};
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -33,6 +39,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const [formData, setFormData] = useState(initialState);
+  const { checkUser } = useContext(ExpenseTrackerContext);
+  const handleSignIn = event => {
+    event.preventDefault();
+    const user = { ...formData };
+    checkUser(user);
+    location.hash = 'home';
+    setFormData(initialState);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -44,7 +59,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={handleSignIn}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -55,6 +70,8 @@ export default function SignIn() {
             autoComplete="email"
             autoFocus
             required
+            value={formData.email}
+            onChange={e => setFormData({ ...formData, email: e.target.value })}
           />
           <TextField
             variant="outlined"
@@ -66,22 +83,24 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             required
+            value={formData.password}
+            onChange={e => setFormData({ ...formData, password: e.target.value })}
           />
           <Button
-            href='#home'
-            type="submit"
+            type='submit'
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+
           >
             Sign In
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#home" variant="body2">
+              {/* <Link href="#home" variant="body2">
                 Guest Sign In
-              </Link>
+              </Link> */}
             </Grid>
             <Grid item>
               <Link href="#sign-up" variant="body2">

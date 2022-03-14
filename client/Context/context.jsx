@@ -1,13 +1,17 @@
 import React, { useReducer, createContext } from 'react';
 import contextReducer from './contextReducer';
 
-const initialState = [];
+const initialState = {
+  transactions: [],
+  user: null
+};
 
 export const ExpenseTrackerContext = createContext(initialState);
 
 export const Provider = ({ children }) => {
 
-  const [transactions, dispatch, user] = useReducer(contextReducer, initialState);
+  const [state, dispatch] = useReducer(contextReducer, initialState);
+  const { transactions, user } = state;
   // Action Creators
   // Dispatch is changing the state of transaction
   const deleteTransaction = transactionId => {
@@ -19,8 +23,8 @@ export const Provider = ({ children }) => {
 
   };
 
-  const addTransaction = transaction => {
-    const fetchConfig = { method: 'POST', body: JSON.stringify(transaction), headers: { 'Content-Type': 'application/json' } };
+  const addTransaction = (transaction, user) => {
+    const fetchConfig = { method: 'POST', body: JSON.stringify(transaction), headers: { 'Content-Type': 'application/json', 'x-access-token': user.token } };
     fetch('/api/transactions', fetchConfig)
       .then(resp => resp.json())
       .then(newTransaction => {
@@ -37,8 +41,18 @@ export const Provider = ({ children }) => {
       });
   };
 
-  const getTransactions = () => {
-    fetch('/api/transactions')
+  const checkUser = user => {
+    const fetchConfig = { method: 'POST', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json' } };
+    fetch('/api/users/sign-in', fetchConfig)
+      .then(resp => resp.json())
+      .then(checkUser => {
+        dispatch({ type: 'CHECK_USER', payload: checkUser });
+      });
+  };
+
+  const getTransactions = user => {
+    const fetchConfig = { method: 'GET', headers: { 'x-access-token': user.token } };
+    fetch('/api/transactions', fetchConfig)
       .then(resp => resp.json())
       .then(transactions => {
         dispatch({ type: 'GET_TRANSACTION', payload: transactions });
@@ -57,6 +71,7 @@ export const Provider = ({ children }) => {
       addTransaction,
       getTransactions,
       addUser,
+      checkUser,
       user
     }}>
       {children}

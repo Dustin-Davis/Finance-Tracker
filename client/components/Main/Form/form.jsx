@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { TextField, Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { ExpenseTrackerContext } from '../../../Context/context';
 import useStyles from './styles';
@@ -17,19 +17,19 @@ const Form = () => {
   // eslint-disable-next-line no-unused-vars
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState(initialState);
-  const { addTransaction } = useContext(ExpenseTrackerContext);
+  const { addTransaction, user } = useContext(ExpenseTrackerContext);
 
-  useEffect(() => {
-    fetch('/api/categories')
-      .then(resp => resp.json())
-      .then(categories => {
-        setCategories(categories);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch('/api/categories')
+  //     .then(resp => resp.json())
+  //     .then(categories => {
+  //       setCategories(categories);
+  //     });
+  // }, []);
 
   const createTransaction = () => {
     const transaction = { ...formData };
-    addTransaction(transaction);
+    addTransaction(transaction, user);
     setFormData(initialState);
   };
   const Categories = formData.type === 'Income' ? incomeCategories : expenseCategories;

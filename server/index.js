@@ -6,6 +6,7 @@ const staticMiddleware = require('./static-middleware');
 const argon2 = require('argon2');
 const ClientError = require('./client-error');
 const jwt = require('jsonwebtoken');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -23,128 +24,6 @@ app.use(errorMiddleware);
 const jsonMiddleware = express.json();
 
 app.use(jsonMiddleware);
-
-app.get('/api/transactions', (req, res) => {
-  const userId = 1;
-
-  const sql = `
-    select
-      "transactionId",
-      "amount",
-      "type",
-      "category",
-      "categoryId",
-      to_char("date", 'MM/DD/YYYY') as "date"
-      from "transactions"
-      join "categories" using ("categoryId")
-      where "userId" = $1
-      order by date desc
-  `;
-  const params = [userId];
-
-  db.query(sql, params)
-    .then(result => {
-      res.json(result.rows);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({
-        error: 'an unexpected error occurred'
-      });
-    });
-});
-
-app.get('/api/categories', (req, res) => {
-  const sql = `
-    select *
-      from "categories"
-  `;
-  db.query(sql)
-    .then(result => {
-      res.json(result.rows);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({
-        error: 'an unexpected error occurred'
-      });
-    });
-});
-
-app.get('/api/users', (req, res) => {
-  const userId = 1;
-  const sql = `
-    select *
-      from "users"
-      join "transactions" using ("userId")
-    where "userId" = $1
-  `;
-
-  const params = [userId];
-
-  db.query(sql, params)
-    .then(result => {
-      res.json(result.rows);
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({
-        error: 'an unexpected error occurred'
-      });
-    });
-});
-
-app.post('/api/transactions', (req, res) => {
-  const body = req.body;
-  const userId = 1;
-  if (!body.amount || !body.type || !body.categoryId || !body.date) {
-    res.status(400).json({
-      error: 'Entry must contain "Amount", "Type"'
-    });
-    return;
-  }
-  const categorySQL = `
-    select "category" from "categories"
-    where "categoryId" = $1;
-  `;
-  const categoryParams = [body.categoryId];
-
-  // Query to get category information
-  db.query(categorySQL, categoryParams)
-    .then(categoryResult => {
-      const [category] = categoryResult.rows;
-
-      if (!category) {
-        return res.status(400).json({ error: 'Invalid category ID provided' });
-      }
-
-      const sql = `
-        insert into "transactions" ("amount", "type", "categoryId", "userId", "date")
-        values ($1, $2, $3, $4, $5)
-        returning "transactionId", "amount", "type", "categoryId", to_char("date", 'MM/DD/YYYY') as "date"
-      `;
-      const params = [body.amount, body.type, body.categoryId, userId, body.date];
-
-      db.query(sql, params)
-        .then(result => {
-          const [transaction] = result.rows;
-          transaction.category = category.category;
-          res.status(201).json(transaction);
-        })
-        .catch(err => {
-          console.error(err);
-          res.status(500).json({
-            error: 'an unexpected error occurred'
-          });
-        });
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({
-        error: 'an unexpected error occurred'
-      });
-    });
-});
 
 app.post('/api/users/sign-up', (req, res, next) => {
   const { email, password } = req.body;
@@ -205,6 +84,132 @@ app.post('/api/users/sign-in', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.use(authorizationMiddleware);
+
+app.get('/api/transactions', (req, res) => {
+  const { userId } = req.user;
+
+  const sql = `
+    select
+      "transactionId",
+      "amount",
+      "type",
+      "category",
+      "categoryId",
+      to_char("date", 'MM/DD/YYYY') as "date"
+      from "transactions"
+      join "categories" using ("categoryId")
+      where "userId" = $1
+      order by date desc
+  `;
+  const params = [userId];
+
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.get('/api/categories', (req, res) => {
+  const sql = `
+    select *
+      from "categories"
+  `;
+  db.query(sql)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.get('/api/users', (req, res) => {
+  const { userId } = req.user;
+
+  const sql = `
+    select *
+      from "users"
+      join "transactions" using ("userId")
+    where "userId" = $1
+  `;
+
+  const params = [userId];
+
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
+app.post('/api/transactions', (req, res) => {
+  const body = req.body;
+  const { userId } = req.user;
+
+  if (!body.amount || !body.type || !body.categoryId || !body.date) {
+    res.status(400).json({
+      error: 'Entry must contain "Amount", "Type"'
+    });
+    return;
+  }
+  const categorySQL = `
+    select "category" from "categories"
+    where "categoryId" = $1;
+  `;
+  const categoryParams = [body.categoryId];
+
+  // Query to get category information
+  db.query(categorySQL, categoryParams)
+    .then(categoryResult => {
+      const [category] = categoryResult.rows;
+
+      if (!category) {
+        return res.status(400).json({ error: 'Invalid category ID provided' });
+      }
+
+      const sql = `
+        insert into "transactions" ("amount", "type", "categoryId", "userId", "date")
+        values ($1, $2, $3, $4, $5)
+        returning "transactionId", "amount", "type", "categoryId", to_char("date", 'MM/DD/YYYY') as "date"
+      `;
+      const params = [body.amount, body.type, body.categoryId, userId, body.date];
+
+      db.query(sql, params)
+        .then(result => {
+          const [transaction] = result.rows;
+          transaction.category = category.category;
+          res.status(201).json(transaction);
+        })
+        .catch(err => {
+          console.error(err);
+          res.status(500).json({
+            error: 'an unexpected error occurred'
+          });
+        });
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
+    });
+});
+
 app.delete('/api/transactions/:transactionId', (req, res) => {
   const id = Number(req.params.transactionId);
   if (!id || !Number.isInteger(id)) {
@@ -232,6 +237,8 @@ app.delete('/api/transactions/:transactionId', (req, res) => {
       res.status(500).json({ error: 'An unexpected error occurred.' });
     });
 });
+
+app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
