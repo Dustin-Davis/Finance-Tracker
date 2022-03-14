@@ -7,11 +7,13 @@ import useStyles from './styles';
 
 const List = () => {
   const classes = useStyles();
-  const { deleteTransaction, getTransactions, transactions } = useContext(ExpenseTrackerContext);
-
+  const { deleteTransaction, getTransactions, transactions, user } = useContext(ExpenseTrackerContext);
   useEffect(() => {
-    getTransactions();
-  }, []);
+    if (!user) {
+      return;
+    }
+    getTransactions(user);
+  }, [user]);
 
   return (
     <MUIList dense={false} className={classes.list}>
