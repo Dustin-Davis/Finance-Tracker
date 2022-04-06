@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { ExpenseTrackerContext } from '../Context/context';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,7 +11,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { ExpenseTrackerContext } from '../Context/context';
 
 const initialState = {
   email: '',
@@ -40,11 +40,12 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   const classes = useStyles();
   const [formData, setFormData] = useState(initialState);
-  const { checkUser } = useContext(ExpenseTrackerContext);
+  const { login } = useContext(ExpenseTrackerContext);
+
   const handleSignIn = event => {
     event.preventDefault();
     const user = { ...formData };
-    checkUser(user);
+    login(user);
     location.hash = 'home';
     setFormData(initialState);
   };
@@ -98,9 +99,6 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item xs>
-              {/* <Link href="#home" variant="body2">
-                Guest Sign In
-              </Link> */}
             </Grid>
             <Grid item>
               <Link href="#sign-up" variant="body2">

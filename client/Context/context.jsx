@@ -41,13 +41,18 @@ export const Provider = ({ children }) => {
       });
   };
 
-  const checkUser = user => {
+  const login = user => {
     const fetchConfig = { method: 'POST', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json' } };
     fetch('/api/users/sign-in', fetchConfig)
       .then(resp => resp.json())
-      .then(checkUser => {
-        dispatch({ type: 'CHECK_USER', payload: checkUser });
+      .then(user => {
+        dispatch({ type: 'CHECK_USER', payload: user });
+        localStorage.setItem('user', JSON.stringify(user));
       });
+  };
+
+  const logout = user => {
+    localStorage.removeItem('user');
   };
 
   const getTransactions = user => {
@@ -71,7 +76,8 @@ export const Provider = ({ children }) => {
       addTransaction,
       getTransactions,
       addUser,
-      checkUser,
+      login,
+      logout,
       user
     }}>
       {children}
