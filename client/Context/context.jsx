@@ -10,6 +10,12 @@ export const ExpenseTrackerContext = createContext(initialState);
 
 export const Provider = ({ children }) => {
 
+  const token = window.localStorage.getItem('user');
+  const payload = JSON.parse(token);
+  if (payload) {
+    initialState.user = payload;
+  }
+
   const [state, dispatch] = useReducer(contextReducer, initialState);
   const { transactions, user } = state;
   // Action Creators
