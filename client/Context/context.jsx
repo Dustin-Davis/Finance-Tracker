@@ -18,8 +18,7 @@ export const Provider = ({ children }) => {
 
   const [state, dispatch] = useReducer(contextReducer, initialState);
   const { transactions, user } = state;
-  // Action Creators
-  // Dispatch is changing the state of transaction
+
   const deleteTransaction = transactionId => {
     const fetchConfig = { method: 'DELETE' };
     fetch(`/api/transactions/${transactionId}`, fetchConfig)

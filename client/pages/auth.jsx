@@ -1,13 +1,11 @@
 import React from 'react';
-import Redirect from '../components/redirect';
 import SignIn from './sign-in';
 import AppContext from '../lib/app-context';
 
 export default class AuthPage extends React.Component {
   render() {
 
-    const { user, route } = this.context;
-    if (user) return <Redirect to='home' />;
+    const { route } = this.context;
 
     return (
       <div className="row pt-5 align-items-center">
