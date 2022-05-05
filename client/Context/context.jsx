@@ -10,10 +10,15 @@ export const ExpenseTrackerContext = createContext(initialState);
 
 export const Provider = ({ children }) => {
 
+  const token = window.localStorage.getItem('user');
+  const payload = JSON.parse(token);
+  if (payload) {
+    initialState.user = payload;
+  }
+
   const [state, dispatch] = useReducer(contextReducer, initialState);
   const { transactions, user } = state;
-  // Action Creators
-  // Dispatch is changing the state of transaction
+
   const deleteTransaction = transactionId => {
     const fetchConfig = { method: 'DELETE' };
     fetch(`/api/transactions/${transactionId}`, fetchConfig)
@@ -41,13 +46,18 @@ export const Provider = ({ children }) => {
       });
   };
 
-  const checkUser = user => {
+  const login = user => {
     const fetchConfig = { method: 'POST', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json' } };
     fetch('/api/users/sign-in', fetchConfig)
       .then(resp => resp.json())
-      .then(checkUser => {
-        dispatch({ type: 'CHECK_USER', payload: checkUser });
+      .then(user => {
+        dispatch({ type: 'CHECK_USER', payload: user });
+        localStorage.setItem('user', JSON.stringify(user));
       });
+  };
+
+  const logout = user => {
+    localStorage.removeItem('user');
   };
 
   const getTransactions = user => {
@@ -71,7 +81,8 @@ export const Provider = ({ children }) => {
       addTransaction,
       getTransactions,
       addUser,
-      checkUser,
+      login,
+      logout,
       user
     }}>
       {children}

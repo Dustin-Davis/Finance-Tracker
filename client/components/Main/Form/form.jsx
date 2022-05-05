@@ -14,25 +14,17 @@ const initialState = {
 
 const Form = () => {
   const classes = useStyles();
-  // eslint-disable-next-line no-unused-vars
-  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState(initialState);
   const { addTransaction, user } = useContext(ExpenseTrackerContext);
-
-  // useEffect(() => {
-  //   fetch('/api/categories')
-  //     .then(resp => resp.json())
-  //     .then(categories => {
-  //       setCategories(categories);
-  //     });
-  // }, []);
 
   const createTransaction = () => {
     const transaction = { ...formData };
     addTransaction(transaction, user);
     setFormData(initialState);
   };
+
   const Categories = formData.type === 'Income' ? incomeCategories : expenseCategories;
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
