@@ -45,8 +45,11 @@ export default function SignIn() {
   const handleSignIn = event => {
     event.preventDefault();
     const user = { ...formData };
-    login(user);
-    location.hash = 'home';
+    login(user)
+      .then(user => {
+        // when user.error set state then use state in return
+        // make new state for error and use that state
+      });
     setFormData(initialState);
   };
 

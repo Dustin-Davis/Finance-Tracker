@@ -2,7 +2,6 @@ import React from 'react';
 import Home from './pages/home';
 import parseRoute from './lib/parse-route';
 import NotFound from './pages/not-found';
-// import SignIn from './pages/sign-in';
 import SignUp from './pages/sign-up';
 import AppContext from './lib/app-context';
 import Auth from './pages/auth';
