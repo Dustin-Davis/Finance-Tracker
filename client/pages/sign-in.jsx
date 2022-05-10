@@ -40,13 +40,20 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   const classes = useStyles();
   const [formData, setFormData] = useState(initialState);
+  const [errorMessage, setErrorMessage] = useState('');
   const { login } = useContext(ExpenseTrackerContext);
 
   const handleSignIn = event => {
     event.preventDefault();
     const user = { ...formData };
-    login(user);
-    location.hash = 'home';
+    login(user)
+      .then(user => {
+        // make new state for error and use that state
+        // when user.error set state then use state in return
+        if (user.error) {
+          setErrorMessage('Invalid Email/Password');
+        }
+      });
     setFormData(initialState);
   };
 
@@ -93,7 +100,6 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
-
           >
             Sign In
           </Button>
@@ -101,6 +107,7 @@ export default function SignIn() {
             <Grid item xs>
             </Grid>
             <Grid item>
+              <div>{errorMessage}</div>
               <Link href="#sign-up" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>

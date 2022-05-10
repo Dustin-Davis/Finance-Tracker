@@ -48,11 +48,15 @@ export const Provider = ({ children }) => {
 
   const login = user => {
     const fetchConfig = { method: 'POST', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json' } };
-    fetch('/api/users/sign-in', fetchConfig)
+    return fetch('/api/users/sign-in', fetchConfig)
       .then(resp => resp.json())
       .then(user => {
-        dispatch({ type: 'CHECK_USER', payload: user });
-        localStorage.setItem('user', JSON.stringify(user));
+        if (!user.error) {
+          dispatch({ type: 'CHECK_USER', payload: user });
+          localStorage.setItem('user', JSON.stringify(user));
+          location.hash = 'home';
+        }
+        return user;
       });
   };
 
