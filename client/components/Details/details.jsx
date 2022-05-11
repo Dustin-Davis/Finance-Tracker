@@ -5,12 +5,12 @@ import { Doughnut } from 'react-chartjs-2';
 import useStyles from './styles';
 import useTransactions from '../../useTransactions';
 
-const Details = ({ title }) => {
+const Details = ({ title, subheader }) => {
   const classes = useStyles();
   const { total, chartData } = useTransactions(title);
   return (
       <Card className={title === 'Income' ? classes.income : classes.expense}>
-        <CardHeader title={title} />
+        <CardHeader title={title} subheader={subheader} />
         <CardContent>
           <Typography variant='h5'>${total}</Typography>
           <Doughnut data={chartData} />
