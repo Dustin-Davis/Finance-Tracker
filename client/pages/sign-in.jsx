@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  errorCode: {
+    color: 'red'
   }
 }));
 
@@ -94,6 +97,7 @@ export default function SignIn() {
             value={formData.password}
             onChange={e => setFormData({ ...formData, password: e.target.value })}
           />
+          <div className={classes.errorCode}>{errorMessage}</div>
           <Button
             type='submit'
             fullWidth
@@ -107,7 +111,6 @@ export default function SignIn() {
             <Grid item xs>
             </Grid>
             <Grid item>
-              <div>{errorMessage}</div>
               <Link href="#sign-up" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>

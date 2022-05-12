@@ -84,6 +84,34 @@ app.post('/api/users/sign-in', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.delete('/api/transactions/:transactionId', (req, res) => {
+  const id = Number(req.params.transactionId);
+  if (!id || !Number.isInteger(id)) {
+    res.status(400).json({ error: 'Invalid Id' });
+    return;
+  }
+  const sql = `
+  delete from "transactions"
+  where "transactionId" = $1
+  returning *
+  `;
+  const values = [id];
+  db.query(sql, values)
+    .then(result => {
+      const transaction = result.rows[0];
+      if (!transaction) {
+        res.status(404).json({ error: 'transactionId does not exist' });
+        return;
+      }
+      res.status(204).json(transaction);
+    })
+    .catch(error => {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      res.status(500).json({ error: 'An unexpected error occurred.' });
+    });
+});
+
 app.use(authorizationMiddleware);
 
 app.get('/api/transactions', (req, res) => {
@@ -207,34 +235,6 @@ app.post('/api/transactions', (req, res) => {
       res.status(500).json({
         error: 'an unexpected error occurred'
       });
-    });
-});
-
-app.delete('/api/transactions/:transactionId', (req, res) => {
-  const id = Number(req.params.transactionId);
-  if (!id || !Number.isInteger(id)) {
-    res.status(400).json({ error: 'Invalid Id' });
-    return;
-  }
-  const sql = `
-  delete from "transactions"
-  where "transactionId" = $1
-  returning *
-  `;
-  const values = [id];
-  db.query(sql, values)
-    .then(result => {
-      const transaction = result.rows[0];
-      if (!transaction) {
-        res.status(404).json({ error: 'transactionId does not exist' });
-        return;
-      }
-      res.status(204).json(transaction);
-    })
-    .catch(error => {
-      // eslint-disable-next-line no-console
-      console.log(error);
-      res.status(500).json({ error: 'An unexpected error occurred.' });
     });
 });
 

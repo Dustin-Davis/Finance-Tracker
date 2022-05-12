@@ -14,7 +14,7 @@ const Main = () => {
       <CardHeader title='Finance Tracker' />
       <CardContent>
         <Typography align='center' variant='h5'>Total Balance ${balance}</Typography>
-        <Divider />
+        <Divider className={classes.divider}/>
         <Form />
       </CardContent>
       <CardContent className={classes.CardContent}>
