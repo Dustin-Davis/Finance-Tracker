@@ -9,11 +9,14 @@ export default function Home(props) {
   const classes = useStyles();
   return <>
   <div>
-    <Grid className={classes.grid} container spacing={0} alignItems='center' justifyContent='center' style={{ height: '100vh' }}>
-    <NavBar />
-      <Grid item xs={12} sm={4} className={classes.mobile}>
+      <Grid className={classes.grid} container alignItems='center' justifyContent='center' style={{ height: '100vh' }}>
+        <NavBar />
+      <Grid item xs={12} sm={4} className={classes.tablet}>
         <Details title='Income' />
       </Grid>
+      {/* <Grid item xs={12} sm={4} className={classes.tablet}>
+        <Details title='Income' />
+      </Grid> */}
       <Grid item xs={12} sm={3} className={classes.main}>
           <Main />
       </Grid>

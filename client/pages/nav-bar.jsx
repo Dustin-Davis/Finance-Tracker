@@ -8,7 +8,8 @@ import { ExpenseTrackerContext } from '../Context/context';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    // flexGrow: 1
+    paddingBottom: '35px'
   },
   menuButton: {
     marginRight: theme.spacing(2)

@@ -11,6 +11,12 @@ export default makeStyles(theme => ({
       display: 'none'
     }
   },
+  tablet: {
+    display: 'none',
+    [theme.breakpoints.between('sm', 'xl')]: {
+      display: 'block'
+    }
+  },
   main: {
     [theme.breakpoints.up('sm')]: {
       paddingBottom: '5%'
@@ -18,13 +24,13 @@ export default makeStyles(theme => ({
   },
   last: {
     [theme.breakpoints.down('sm')]: {
-      marginBottom: theme.spacing(3),
-      paddingBottom: '200px'
+      marginBottom: theme.spacing(3)
+      // paddingBottom: '200px'
     }
   },
   grid: {
     '& > *': {
-      margin: theme.spacing(2)
+      margin: '2px'
     }
   }
 }));
