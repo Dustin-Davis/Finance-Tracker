@@ -14,9 +14,6 @@ export default function Home(props) {
       <Grid item xs={12} sm={4} className={classes.tablet}>
         <Details title='Income' />
       </Grid>
-      {/* <Grid item xs={12} sm={4} className={classes.tablet}>
-        <Details title='Income' />
-      </Grid> */}
       <Grid item xs={12} sm={3} className={classes.main}>
           <Main />
       </Grid>

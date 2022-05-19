@@ -19,7 +19,8 @@ export default makeStyles(theme => ({
   },
   main: {
     [theme.breakpoints.up('sm')]: {
-      paddingBottom: '5%'
+      paddingBottom: '5%',
+      'max-width': '30%'
     }
   },
   last: {
