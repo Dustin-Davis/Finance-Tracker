@@ -55,7 +55,9 @@ const Form = () => {
         <TextField type='number' label='Amount' fullWidth value={formData.amount} onChange={e => setFormData({ ...formData, amount: e.target.value })}/>
       </Grid>
       <Grid item xs={6}>
-        <TextField type='date' label='Date' fullWidth value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })}/>
+        <TextField type='date' label='Date' fullWidth value={formData.date}
+        inputProps={{ style: { fontSize: '.85rem' } }}
+        onChange={e => setFormData({ ...formData, date: e.target.value })}/>
       </Grid>
       <Button className={classes.button} variant='outlined' color='primary' fullWidth onClick={createTransaction}>Create</Button>
     </Grid>
