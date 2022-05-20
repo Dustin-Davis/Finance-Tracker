@@ -51,8 +51,6 @@ export default function SignIn() {
     const user = { ...formData };
     login(user)
       .then(user => {
-        // make new state for error and use that state
-        // when user.error set state then use state in return
         if (user.error) {
           setErrorMessage('Invalid Email/Password');
         }
