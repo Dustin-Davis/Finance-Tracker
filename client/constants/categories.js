@@ -4,13 +4,13 @@ const expenseColors = ['#b50d12', '#bf2f1f', '#c9452c', '#d3583a', '#dc6a48', '#
 export const incomeCategories = [
   { categoryId: 1, category: 'Business', type: 'Business', amount: 0, color: incomeColors[0] },
   { categoryId: 2, category: 'Investments', type: 'Investments', amount: 0, color: incomeColors[1] },
-  { categoryId: 3, category: 'Extra income', type: 'Extra income', amount: 0, color: incomeColors[2] },
+  { categoryId: 3, category: 'Extra Income', type: 'Extra Income', amount: 0, color: incomeColors[2] },
   { categoryId: 4, category: 'Deposits', type: 'Deposits', amount: 0, color: incomeColors[3] },
   { categoryId: 5, category: 'Lottery', type: 'Lottery', amount: 0, color: incomeColors[4] },
   { categoryId: 6, category: 'Gifts', type: 'Gifts', amount: 0, color: incomeColors[5] },
   { categoryId: 7, category: 'Salary', type: 'Salary', amount: 0, color: incomeColors[6] },
   { categoryId: 8, category: 'Savings', type: 'Savings', amount: 0, color: incomeColors[7] },
-  { categoryId: 9, category: 'Rental income', type: 'Rental income', amount: 0, color: incomeColors[8] }
+  { categoryId: 9, category: 'Rental Income', type: 'Rental Income', amount: 0, color: incomeColors[8] }
 ];
 
 export const expenseCategories = [
