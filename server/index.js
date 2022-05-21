@@ -19,8 +19,6 @@ const app = express();
 
 app.use(staticMiddleware);
 
-app.use(errorMiddleware);
-
 const jsonMiddleware = express.json();
 
 app.use(jsonMiddleware);
