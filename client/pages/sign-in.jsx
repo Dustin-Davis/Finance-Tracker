@@ -17,6 +17,11 @@ const initialState = {
   password: ''
 };
 
+const guestState = {
+  email: 'Guest@mail.com',
+  password: 'guest1234'
+};
+
 const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -43,6 +48,7 @@ const useStyles = makeStyles(theme => ({
 export default function SignIn() {
   const classes = useStyles();
   const [formData, setFormData] = useState(initialState);
+  const [guestData, setGuestData] = useState(guestState);
   const [errorMessage, setErrorMessage] = useState('');
   const { login } = useContext(ExpenseTrackerContext);
 
@@ -56,6 +62,13 @@ export default function SignIn() {
         }
       });
     setFormData(initialState);
+  };
+
+  const guestSignIn = event => {
+    event.preventDefault();
+    const guest = { ...guestData };
+    login(guest);
+    setGuestData(guestState);
   };
 
   return (
@@ -107,6 +120,9 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item xs>
+              <Link onClick={guestSignIn} variant="body2">
+                Guest Sign In
+              </Link>
             </Grid>
             <Grid item>
               <Link href="#sign-up" variant="body2">
