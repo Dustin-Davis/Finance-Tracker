@@ -103,10 +103,11 @@ app.delete('/api/transactions/:transactionId', (req, res) => {
       }
       res.status(204).json(transaction);
     })
-    .catch(error => {
-      // eslint-disable-next-line no-console
-      console.log(error);
-      res.status(500).json({ error: 'An unexpected error occurred.' });
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: 'an unexpected error occurred'
+      });
     });
 });
 
@@ -199,7 +200,6 @@ app.post('/api/transactions', (req, res) => {
   `;
   const categoryParams = [body.categoryId];
 
-  // Query to get category information
   db.query(categorySQL, categoryParams)
     .then(categoryResult => {
       const [category] = categoryResult.rows;
