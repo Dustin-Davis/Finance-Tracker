@@ -1,4 +1,3 @@
-// Reducer => a function that takes in the old state, and an action (action specify how do we want to change the state) => new state...
 const contextReducer = (state, action) => {
   let transactions;
   switch (action.type) {

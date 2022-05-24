@@ -8,7 +8,6 @@ import { ExpenseTrackerContext } from '../Context/context';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // flexGrow: 1
     paddingBottom: '35px'
   },
   menuButton: {
@@ -28,7 +27,6 @@ export default function ButtonAppBar() {
       <AppBar>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-
           </Typography>
           <Button href='#' color="inherit" onClick={logout}>Sign Out</Button>
         </Toolbar>
